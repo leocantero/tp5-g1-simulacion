@@ -1,76 +1,150 @@
-# TP4 — Simulación del Centro de Procesamiento de Pedidos
+# TP5 — Simulación de un Sistema Real
+## Centro de Procesamiento de Pedidos de un E-commerce
 
-Este proyecto contiene el modelo de simulación evento-a-evento y el análisis de
-dimensionamiento de operarios para el centro de distribución de un e-commerce
-con dos niveles de prioridad de atención.
+Trabajo Práctico N.º 5 de la materia **Simulación**  
+UTN — Facultad Regional Buenos Aires  
+Ingeniería en Sistemas de Información
 
----
-
-## Contenido del proyecto
-
-### Documentos
-
-- **`Análisis Previo.pdf`** — Enunciado y contexto del problema (variables exógenas/endógenas, TEI, TEF, reglas operativas).
-- **`diagrama_flujo.md`** — Diagrama de flujo del modelo (Mermaid), subrutinas, convención del modelo y glosario de variables.
-- **`informe_final.md`** — Informe completo con metodología, resultados, recomendación de plantel y estrategia operativa.
-
-### Scripts
-
-- **`analisis_y_fdps.py`** — Análisis del dataset y ajuste de las 9 distribuciones de probabilidad (FDPs).
-- **`simulacion.py`** — Implementación del modelo evento-a-evento. Ejecutable por línea de comandos.
-- **`evaluacion_sla.py`** — Sweep de configuraciones y evaluación contra el criterio SLA.
-
-### Datasets utilizados
-
-- **`olist_orders_dataset.csv`** — Tabla de órdenes con timestamps de compra, aprobación, entrega al courier y entrega al cliente.
-- **`olist_order_items_dataset.csv`** — Ítems por orden, usado para calcular el monto total y clasificar prioridad (Alta / Normal).
-
-> Nota: el dataset completo Olist contiene más tablas (clientes, sellers, productos, etc.) pero el modelo solo utiliza estas dos.
+El proyecto modela y simula el funcionamiento de un centro de distribución
+de e-commerce utilizando una metodología de simulación discreta evento-a-evento,
+con el objetivo de determinar configuraciones óptimas de operarios para
+distintos períodos del año.
 
 ---
 
-## Flujo de uso
+# Integrantes
 
-```
-┌─────────────────────────┐
-│   Datasets Olist        │
-│   - orders              │
-│   - order_items         │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│   analisis_y_fdps.py    │  → Imprime las 9 FDPs (IA × 3 + TEA × 3 + TEN × 3)
-└────────────┬────────────┘
-             │  (los parámetros ya están copiados en simulacion.py)
-             ▼
-┌─────────────────────────┐
-│   simulacion.py         │  → Corre 1 simulación con CLI
-│   (motor evento-a-      │     python simulacion.py --na 80 --nn 160 ...
-│    evento)              │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│   evaluacion_sla.py     │  → Sweep de configs, encuentra óptimos por período
-│   (orquestador)         │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│   informe_final.md      │  → Conclusiones y recomendación operativa
-└─────────────────────────┘
+- Leonel Adrián Cantero
+- Rocío Belén Copa
+- Elías Mouesca
+- Sebastián Ariel Vicente
+
+---
+
+# Estructura del repositorio
+
+```text
+TP5-SIMULACION/
+│
+├── data/
+│
+├── docs/
+│   ├── analisis_previo.pdf
+│   ├── paper.pdf
+│   ├── presentacion.pdf
+│   └── diagrama_flujo.md
+│
+├── resultados/
+│   └── informe_final.pdf
+│
+├── src/
+│   ├── analisis_y_fdps.py
+│   ├── simulacion.py
+│   └── evaluacion_sla.py
+│
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## Cómo correr
+# Modelo resumido
 
-### Requerimientos
+- Simulación discreta evento-a-evento.
+- Dos líneas de procesamiento:
+  - CA (prioridad Alta)
+  - CN (prioridad Normal)
+- Disciplina FIFO.
+- Política de prioridad no apropiativa.
+- Evaluación de configuraciones mediante SLA.
 
-Python 3.10+ con las siguientes librerías:
+---
 
+# Contenido del proyecto
+
+## Documentación
+
+- **`docs/analisis_previo.pdf`**  
+  Modelo conceptual, clasificación de variables, TEI y TEF.
+
+- **`docs/diagrama_flujo.md`**  
+  Diagrama de flujo del modelo y subrutinas.
+
+- **`docs/paper.pdf`**  
+  Informe académico final con metodología y desarrollo del modelo.
+
+- **`docs/presentacion.pdf`**  
+  Presentación utilizada para la exposición oral.
+
+---
+
+## Resultados
+
+- **`resultados/informe_final.pdf`**  
+  Resultados obtenidos, interpretación y conclusiones del estudio.
+
+---
+
+## Scripts
+
+- **`src/analisis_y_fdps.py`**  
+  Procesamiento del dataset y ajuste de distribuciones de probabilidad.
+
+- **`src/simulacion.py`**  
+  Motor principal de simulación evento-a-evento.
+
+- **`src/evaluacion_sla.py`**  
+  Evaluación de configuraciones y búsqueda de configuraciones óptimas.
+
+---
+
+## Datasets utilizados
+
+- **`data/olist_orders_dataset.csv`**
+- **`data/olist_order_items_dataset.csv`**
+
+El modelo utiliza datos históricos del dataset público de Olist
+para construir las distribuciones de arribos y tiempos de atención.
+
+---
+
+# Flujo de trabajo
+
+```text
+Datasets
+   ↓
+Análisis y ajuste de FDPs
+   ↓
+Motor de simulación
+   ↓
+Evaluación SLA
+   ↓
+Resultados y conclusiones
 ```
+
+---
+
+# Criterio SLA
+
+Una configuración se considera aceptable si cumple simultáneamente:
+
+- PPSA ≤ 3 días
+- PPSN ≤ 5 días
+- PTOA ≤ 35%
+- PTON ≤ 35%
+
+La configuración óptima es la de menor cantidad total de operarios
+que satisface todos los criterios.
+
+---
+
+# Cómo ejecutar el proyecto
+
+## Requerimientos
+
+Python 3.10+ y las siguientes librerías:
+
+```text
 pandas
 numpy
 matplotlib
@@ -78,61 +152,64 @@ scipy
 fitter
 ```
 
-Instalación (en un virtualenv):
+Instalación:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
 pip install pandas numpy matplotlib scipy fitter
 ```
 
-### 1) Ajustar las FDPs sobre los datos
+---
+
+## 1) Ajustar distribuciones
 
 ```bash
-python analisis_y_fdps.py
+python src/analisis_y_fdps.py
 ```
 
-Salida: por cada período (ene-feb / jun-jul / nov-dic) y prioridad (Alta / Normal),
-imprime la mejor distribución ajustada y sus parámetros. Estos parámetros ya están
-copiados en `simulacion.py` (constantes `FDP_IA`, `FDP_TEA`, `FDP_TEN`).
-
-> Tiempo aproximado de ejecución: 5-10 minutos (Fitter prueba ~80 distribuciones por muestra).
-
-### 2) Correr una simulación individual
-
-```bash
-python simulacion.py --na 80 --nn 160 --tf 88000 --periodo ene-feb --seed 42
-```
-
-Parámetros:
-
-| Flag | Descripción | Default |
-|------|-------------|---------|
-| `--na` | Operarios línea Alta | 1 |
-| `--nn` | Operarios línea Normal | 1 |
-| `--tf` | Tiempo final (minutos) | 100000 |
-| `--periodo` | `ene-feb` / `jun-jul` / `nov-dic` | `nov-dic` |
-| `--seed` | Semilla aleatoria | 42 |
-
-### 3) Evaluar el barrido de configuraciones (SLA)
-
-```bash
-python evaluacion_sla.py
-```
-
-Corre las configuraciones definidas en el script para los 3 períodos, con 3 semillas
-cada una, y reporta cuáles cumplen el SLA y cuál es el óptimo por período.
-
-> Tiempo aproximado: 30-60 minutos.
+Obtiene las distribuciones de probabilidad utilizadas por el modelo.
 
 ---
 
-## Configuración óptima recomendada
+## 2) Ejecutar una simulación individual
 
-| Período | Operarios Alta (NA) | Operarios Normal (NN) | Total |
-|---------|---------------------|------------------------|-------|
+```bash
+python src/simulacion.py \
+  --na 80 \
+  --nn 160 \
+  --tf 100000 \
+  --periodo ene-feb \
+  --seed 42
+```
+
+### Parámetros
+
+| Flag | Descripción |
+|------|-------------|
+| `--na` | Operarios línea Alta |
+| `--nn` | Operarios línea Normal |
+| `--tf` | Tiempo final de simulación |
+| `--periodo` | `ene-feb`, `jun-jul`, `nov-dic` |
+| `--seed` | Semilla aleatoria |
+
+---
+
+## 3) Evaluar configuraciones (SLA)
+
+```bash
+python src/evaluacion_sla.py
+```
+
+Ejecuta múltiples configuraciones y determina cuáles cumplen el SLA.
+
+---
+
+# Configuración óptima recomendada
+
+| Período | NA | NN | Total |
+|---------|----|----|-------|
 | Enero - Febrero | 80 | 160 | 240 |
 | Junio - Julio | 125 | 250 | 375 |
 | Noviembre - Diciembre | 240 | 480 | 720 |
 
-Detalles, justificación y estrategia operativa en `informe_final.md`.
+Los detalles completos del análisis y la interpretación de resultados
+se encuentran en `resultados/informe_final.pdf`.
