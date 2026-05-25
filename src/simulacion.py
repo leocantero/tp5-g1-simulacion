@@ -2,23 +2,24 @@
 """
 Simulación evento-a-evento del sistema de procesamiento de pedidos.
 
-Implementación del modelo descripto en diagrama_flujo.md.
+Implementación del modelo descripto en docs/diagrama_flujo.md.
 
 Modelo:
   - 2 líneas de procesamiento: CA (Alta) y CN (Normal).
-  - CA atiende solo Alta. CN atiende Normal, con preferencia por Alta si hay cola.
-  - No apropiativo: no se interrumpen pedidos en curso.
-  - Cuando un Alta es absorbido por CN, su tiempo de atención es TEN
-    y a partir de ese momento se contabiliza en las métricas de la línea CN.
+  - CA atiende solo Alta.
+  - CN atiende Normal, con preferencia por Alta si hay cola.
+  - Política no apropiativa: no se interrumpen pedidos en curso.
+  - Cuando un pedido Alta es absorbido por CN, su tiempo de atención
+    es TEN y se contabiliza dentro de las métricas de la línea CN.
 
 Uso (CLI):
-    python simulacion.py --na 2 --nn 3 --tf 100000 --periodo nov-dic
-    python simulacion.py --help
+    python src/simulacion.py --na 2 --nn 3 --tf 100000 --periodo nov-dic
+    python src/simulacion.py --help
 
 Unidades:
-  - IA en MINUTOS (como se ajustó con Fitter).
-  - TEA / TEN en HORAS (como se ajustó), pero internamente las convertimos a
-    minutos multiplicando por 60. Todo el reloj de la simulación corre en MINUTOS.
+  - IA en minutos.
+  - TEA / TEN en horas.
+  - Internamente toda la simulación se ejecuta en minutos.
 """
 
 import argparse

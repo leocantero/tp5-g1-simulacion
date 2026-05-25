@@ -38,6 +38,7 @@ TP5-SIMULACION/
 │   └── informe_final.pdf
 │
 ├── src/
+│   ├── __init__.py
 │   ├── analisis_y_fdps.py
 │   ├── simulacion.py
 │   └── evaluacion_sla.py
@@ -140,6 +141,8 @@ que satisface todos los criterios.
 
 # Cómo ejecutar el proyecto
 
+> Todos los comandos deben ejecutarse desde la raíz del repositorio.
+
 ## Requerimientos
 
 Python 3.10+ y las siguientes librerías:
@@ -152,9 +155,14 @@ scipy
 fitter
 ```
 
-Instalación:
+### Instalación en entorno virtual (recomendado)
 
 ```bash
+python3 -m venv .venv
+
+source .venv/bin/activate      # Linux / macOS
+# .venv\Scripts\activate       # Windows
+
 pip install pandas numpy matplotlib scipy fitter
 ```
 
