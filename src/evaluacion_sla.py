@@ -15,7 +15,7 @@ TF = 88.000 minutos ≈ 61 días = ~2 meses reales (largo de un período del añ
 """
 
 import statistics
-from simulacion import simular
+from src.simulacion import simular
 
 
 # Criterios de aceptación (SLA)
